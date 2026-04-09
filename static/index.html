@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Iniciar sesion | Cobertura Paquetexpress</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <section class="login-screen" id="login-screen">
+      <div class="login-card">
+        <div class="login-copy">
+          <span class="eyebrow">Acceso seguro</span>
+          <h1>Iniciar sesion</h1>
+          <p>
+            Ingresa con tus credenciales para acceder a la consulta por codigo postal
+            y a la administracion de la base de datos.
+          </p>
+        </div>
+
+        <form id="login-form" class="login-form">
+          <div class="field-group">
+            <label for="login-username">Usuario</label>
+            <input id="login-username" name="username" type="text" placeholder="admin" autocomplete="username" />
+          </div>
+          <div class="field-group">
+            <label for="login-password">Contrasena</label>
+            <input id="login-password" name="password" type="password" placeholder="admin" autocomplete="current-password" />
+          </div>
+          <div class="import-alert neutral" id="login-alert">Ingresa tus credenciales para continuar.</div>
+          <button class="primary-button" type="submit">Entrar</button>
+        </form>
+      </div>
+    </section>
+
+    <script src="/login.js" defer></script>
+  </body>
+</html>

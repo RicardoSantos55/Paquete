@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cobertura Paquetexpress</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="page-shell" id="app-shell">
+      <header class="hero">
+        <div class="hero-copy">
+          <span class="eyebrow">Cobertura nacional</span>
+          <h1>Consulta por codigo postal</h1>
+          <p>
+            Revisa cobertura, sucursal destino y distancia desde cualquiera de las
+            cuatro sucursales base. La aplicacion arranca con una base cargada y
+            te deja reemplazarla cuando lo necesites.
+          </p>
+        </div>
+        <div class="hero-panel">
+          <div class="hero-topbar">
+            <div class="hero-stat">
+              <span class="hero-stat-label">Base de datos activa</span>
+              <strong id="database-name">Cargando...</strong>
+            </div>
+            <div class="session-box">
+              <span class="hero-stat-label">Sesion</span>
+              <strong id="session-username">admin</strong>
+              <button class="secondary-button" id="logout-button" type="button">Cerrar sesion</button>
+            </div>
+          </div>
+          <div class="hero-stat-grid">
+            <article>
+              <span>CP unicos</span>
+              <strong id="postal-count">-</strong>
+            </article>
+            <article>
+              <span>Registros</span>
+              <strong id="coverage-count">-</strong>
+            </article>
+            <article>
+              <span>Rutas</span>
+              <strong id="route-count">-</strong>
+            </article>
+            <article>
+              <span>CP repetidos</span>
+              <strong id="duplicate-count">-</strong>
+            </article>
+          </div>
+        </div>
+      </header>
+
+      <main class="content-grid">
+        <section class="card upload-card">
+          <div class="card-heading">
+            <span class="step-chip">1</span>
+            <div>
+              <h2>Agregar datos</h2>
+              <p>Elige si quieres reemplazar toda la base o capturar un registro manual.</p>
+            </div>
+          </div>
+
+          <div class="data-options">
+            <section class="data-option">
+              <div class="option-heading">
+                <h3>Cambiar base completa</h3>
+                <p>Importa un nuevo Excel y reemplaza toda la informacion de la base.</p>
+              </div>
+
+              <form id="upload-form" class="upload-form">
+                <div class="field-group">
+                  <label for="database-file">Archivo Excel</label>
+                  <p class="field-hint">Selecciona el archivo que quieres importar a la base de datos.</p>
+                </div>
+                <label class="upload-dropzone" for="database-file">
+                  <input id="database-file" name="database" type="file" accept=".xlsx" />
+                  <span class="upload-title">Arrastra tu Excel aqui</span>
+                  <span class="upload-caption">o haz clic para importarlo a SQLite</span>
+                </label>
+                <div class="selected-file">
+                  <span>Archivo seleccionado</span>
+                  <strong id="selected-file-name">Ningun archivo seleccionado</strong>
+                </div>
+                <button class="primary-button" type="submit">Reemplazar base</button>
+              </form>
+            </section>
+
+            <section class="data-option">
+              <div class="option-heading">
+                <h3>Agregar datos manuales</h3>
+                <p>Captura un registro y agregalo uno por uno a la base de datos.</p>
+              </div>
+
+              <form id="manual-form" class="manual-form">
+                <div class="manual-grid">
+                  <div class="field-group">
+                    <label for="manual-postal-code">Codigo postal</label>
+                    <input id="manual-postal-code" name="postal_code" type="text" inputmode="numeric" maxlength="5" placeholder="Ej. 44940" />
+                  </div>
+                  <div class="field-group">
+                    <label for="manual-state">Estado</label>
+                    <input id="manual-state" name="state" type="text" placeholder="Ej. Jalisco" />
+                  </div>
+                  <div class="field-group">
+                    <label for="manual-city">Ciudad</label>
+                    <input id="manual-city" name="city" type="text" placeholder="Ej. Guadalajara" />
+                  </div>
+                  <div class="field-group">
+                    <label for="manual-municipality">Municipio</label>
+                    <input id="manual-municipality" name="municipality" type="text" placeholder="Ej. Guadalajara" />
+                  </div>
+                  <div class="field-group">
+                    <label for="manual-neighborhood">Colonia</label>
+                    <input id="manual-neighborhood" name="neighborhood" type="text" placeholder="Ej. Americana" />
+                  </div>
+                  <div class="field-group">
+                    <label for="manual-coverage">Cobertura</label>
+                    <input id="manual-coverage" name="coverage" type="text" placeholder="Ej. PAQUETEXPRESS" />
+                  </div>
+                  <div class="field-group">
+                    <label for="manual-branch">Sucursal destino</label>
+                    <input id="manual-branch" name="branch" type="text" placeholder="Ej. GDL02" />
+                  </div>
+                  <div class="field-group">
+                    <label for="manual-plaza">Plaza destino</label>
+                    <input id="manual-plaza" name="plaza" type="text" placeholder="Ej. GDL" />
+                  </div>
+                </div>
+                <button class="primary-button" type="submit">Guardar registro manual</button>
+              </form>
+            </section>
+          </div>
+
+          <div class="import-summary">
+            <div class="import-summary-header">
+              <h3>Resumen de carga</h3>
+              <span class="import-badge" id="import-badge">Base lista</span>
+            </div>
+
+            <div class="meta-list">
+              <div>
+                <span>Origen importado</span>
+                <strong id="source-name">Verificando...</strong>
+              </div>
+              <div>
+                <span>Estado</span>
+                <strong id="database-status">Verificando base...</strong>
+              </div>
+            </div>
+
+            <div class="import-alert neutral" id="import-alert">
+              La base de datos esta lista para consulta.
+            </div>
+          </div>
+        </section>
+
+        <section class="card search-card">
+          <div class="card-heading">
+            <span class="step-chip">2</span>
+            <div>
+              <h2>Buscar por sucursal y codigo postal</h2>
+              <p>Selecciona origen, captura el CP y obtendras el dictamen al instante.</p>
+            </div>
+          </div>
+
+          <form id="search-form" class="search-form">
+            <div class="field-group">
+              <label for="branch-select">Sucursal origen</label>
+              <select id="branch-select" name="branch"></select>
+              <p class="field-hint" id="branch-description"></p>
+            </div>
+
+            <div class="field-group">
+              <label for="postal-code">Codigo postal</label>
+              <input
+                id="postal-code"
+                name="postalCode"
+                type="text"
+                inputmode="numeric"
+                maxlength="5"
+                placeholder="Ej. 44940"
+              />
+            </div>
+
+            <button class="primary-button" type="submit">Buscar cobertura</button>
+          </form>
+        </section>
+      </main>
+
+      <section class="card results-card">
+        <div class="results-header">
+          <div>
+            <h2>Resultados</h2>
+            <p>La tabla muestra datos generales, cobertura y la validacion de distancia.</p>
+          </div>
+          <span class="result-badge" id="result-count">0 coincidencias</span>
+        </div>
+
+        <div class="table-shell">
+          <table>
+            <thead>
+              <tr>
+                <th>CP</th>
+                <th>Estado</th>
+                <th>Ciudad</th>
+                <th>Municipio</th>
+                <th>Colonia</th>
+                <th>Cobertura</th>
+                <th>Sucursal destino</th>
+                <th>Plaza destino</th>
+                <th>Distancia</th>
+                <th>&lt;= 1600 km</th>
+              </tr>
+            </thead>
+            <tbody id="results-body">
+              <tr>
+                <td colspan="10" class="empty-state">
+                  No hay resultados todavia.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <script src="/app.js" defer></script>
+  </body>
+</html>
